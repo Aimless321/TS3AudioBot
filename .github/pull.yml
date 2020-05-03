@@ -1,0 +1,7 @@
+version: "1"
+rules:
+  - base: master
+    upstream: Splamy:master
+    mergeMethod: squash
+    assignees:
+      - Aimless321
