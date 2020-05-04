@@ -1,13 +1,22 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS builder
 
 WORKDIR /build
-COPY . ./
+COPY TSLib ./TSLib
+COPY TS3ABotUnitTests ./TS3ABotUnitTests
+COPY TS3AudioBot ./TS3AudioBot
+COPY TS3AudioBot.sln TS3AudioBot.ruleset Directory.Build.targets ./
 
-RUN dotnet build --framework netcoreapp2.2 --configuration Release TS3AudioBot.sln
+RUN dotnet publish --framework netcoreapp2.2 --configuration Release TS3AudioBot.sln
+RUN ls /build/TS3AudioBot/bin/Release/netcoreapp2.2/
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1
+FROM mcr.microsoft.com/dotnet/core/runtime:2.2
+
 WORKDIR /data
-COPY --from=builder /build/TS3AudioBot/bin/Release/netcoreapp2.2/TS3AudioBot.dll .
+RUN apt update && apt install -y libopus-dev ffmpeg
+
+COPY --from=builder /build/TS3AudioBot/bin/Release/netcoreapp2.2/publish .
+
+RUN ls -al  && ls -al lib && ls -al lib/x64
 
 WORKDIR /data/config
-ENTRYPOINT ["dotnet", "/data/TS3AudioBot.dll"]
+ENTRYPOINT ["dotnet", "/data/TS3AudioBot.dll", "--non-interactive"]
