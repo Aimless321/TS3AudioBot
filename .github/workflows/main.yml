@@ -1,0 +1,28 @@
+
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
+        with:
+          submodules: recursive
+      - name: List
+        run: ls -al
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.registryUsername }}
+          password: ${{ secrets.registryPassword }}
+          registry: ${{ secrets.registryUrl }}
+          repository: ts3audiobot
+          tags: latest
+          dockerfile: .github/Dockerfile
