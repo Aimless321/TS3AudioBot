@@ -4,7 +4,7 @@ WORKDIR /build
 COPY TSLib ./TSLib
 COPY TS3ABotUnitTests ./TS3ABotUnitTests
 COPY TS3AudioBot ./TS3AudioBot
-COPY TS3AudioBot.sln TS3AudioBot.ruleset Directory.Build.targets ./
+COPY TS3AudioBot.sln Directory.Build.targets ./
 
 RUN dotnet publish --framework netcoreapp2.2 --configuration Release TS3AudioBot.sln
 
